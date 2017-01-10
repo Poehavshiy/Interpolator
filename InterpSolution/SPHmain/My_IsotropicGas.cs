@@ -78,11 +78,11 @@ namespace SPH_2D
             }
             else
             {
-                M = (p  * X * Y ) / N;
+                M = (p * Math.PI * X * Y / 2) / N;
             }
             // double XYratio = X / Y;
-            int per_y = (int)Math.Floor(N/X);
-            int per_x = N / per_y;//number / per_y;
+            int per_y = (int)Math.Sqrt(N);
+            int per_x = per_y;//number / per_y;
             double xstep = X / per_x;
             double ystep = Y / per_y;
             //
@@ -169,7 +169,7 @@ namespace SPH_2D
 
             foreach (var regShape in regionsAndShapes)
             {
-                particles.AddRange(FillRegion(regShape.Reg, regShape.Shape, 50));
+                particles.AddRange(FillRegion(regShape.Reg, regShape.Shape, 10));
             }
             //
             return particles;
@@ -247,6 +247,24 @@ namespace SPH_2D
         //
         public override void FillDts()
         {
+
+
+            //Список зеркальных частиц
+            var miracleList = new List<IMy_IsotropicGas>();
+
+
+
+            //Создаем зеркальные частицы
+            //if(Neibs.Any(n => (n as My_IsotropicGas).isboundary))
+            foreach(var neib in Neibs.Cast<My_IsotropicGas>().Where(n => !n.isboundary).Concat(new[] { this })) {
+                //Если у соседа есть в соседях граница, то 
+                if(neib.Neibs.Cast<My_IsotropicGas>().Any(nn => nn.isboundary)) {
+                    //Отображаем соседа
+                    var mir = neib.CreateMiracleClone(My_Sph2D.boundaries);
+                    miracleList.Add(mir);
+                }
+            }
+
             foreach (var neib in Neibs.Where(n => GetDistTo(n) < hmax).Cast<IMy_IsotropicGas>())//.Concat(miracleList.Where(mp => mp.GetDistTo(this) < hmax)))
             {
                 Vector2D deltaV = Vel.Vec2D - neib.Vel.Vec2D;
@@ -343,6 +361,12 @@ namespace SPH_2D
         public override void SetP()
         {
 
+            //Ro = Neibs.Cast<IsotropicGasParticle>().Sum(n => {
+            //    double h = alpha * (D + n.D) * 0.5;
+            //    double w = W_func(GetDistTo(n),h);
+            //    return n.M * w;
+
+            //}) + M* W_func(0,1);
             P = (k - 1d) * Ro * E;
             Ro = M* W_func(0, hmax);
             dE = 0d;
@@ -362,7 +386,7 @@ namespace SPH_2D
         public static List<Tuple<Vector2D, Vector2D>> boundaries;
 
         public My_Sph2D(string pathToreal, string pathToBound) :
-            base(FileReader.ConstructRealPart(pathToreal),null)//, FileReader.ConstructBountPart(pathToBound, 1))
+            base(FileReader.ConstructRealPart(pathToreal), FileReader.ConstructBountPart(pathToBound, 4))
         {
             int i = 0;
             i++;

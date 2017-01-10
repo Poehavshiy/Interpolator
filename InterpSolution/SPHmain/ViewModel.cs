@@ -19,7 +19,7 @@ namespace SPH_2D {
         double Ro0, P0, E0;
 
         public VMPropRx<PlotModel,SolPoint> Model1Rx { get; private set; }
-        public int DrawState { get; set; } = 0;
+        public int DrawState { get; set; } = 1;
         public int WichGraph { get; set; } = 0;
         Sph2D _curr4Draw;
         private LinearColorAxis colorAxis;
@@ -103,9 +103,9 @@ namespace SPH_2D {
         }
 
         public void Fill0s(Sph2D curr) {
-            Ro0 = curr.AllParticles.Cast<IsotropicGasParticle>().Max(p => p.Ro);
-            P0 = curr.AllParticles.Cast<IsotropicGasParticle>().Max(p => p.P);
-            E0 = curr.AllParticles.Cast<IsotropicGasParticle>().Max(p => p.E);
+            Ro0 = curr.AllParticles.Cast<IGasParticleVer3>().Max(p => p.Ro);
+            P0 = curr.AllParticles.Cast<IGasParticleVer3>().Max(p => p.P);
+            E0 = curr.AllParticles.Cast<IGasParticleVer3>().Max(p => p.E);
         }
 
         public void Draw(double t,PlotModel pm) {
@@ -119,13 +119,13 @@ namespace SPH_2D {
             E.Points.Clear();
             E.MarkerFill = OxyColors.Blue;
             colorSer2D.Points.Clear();
-            foreach(var p in _curr4Draw.AllParticles.Cast<IsotropicGasParticle>()) {
+            foreach(var p in _curr4Draw.AllParticles.Cast<IGasParticleVer3>()) {
                 Ro.Points.Add(new ScatterPoint(p.X,p.Ro / Ro0,value: p.Ro / Ro0));
-                V.Points.Add(new ScatterPoint(p.X,p.Vel.X / p.GetCl(),value: p.Vel.X / p.GetCl()));
+                V.Points.Add(new ScatterPoint(p.X,p.VelVec2D.GetLength() / p.C,value: p.VelVec2D.GetLength() / p.C));
                 P.Points.Add(new ScatterPoint(p.X,p.P / P0,value: p.P / P0));
                 E.Points.Add(new ScatterPoint(p.X,p.E / E0,value: p.E / E0));
             }
-            pm.Title = $"{t:0.##########} s,  RoMax = {_curr4Draw.Particles.Cast<IsotropicGasParticle>().Max(p => p.Ro):0.###},  Pmax = {_curr4Draw.Particles.Cast<IsotropicGasParticle>().Max(p => p.P):0.###}";
+            pm.Title = $"{t:0.##########} s,  RoMax = {_curr4Draw.Particles.Cast<IGasParticleVer3>().Max(p => p.Ro):0.###},  Pmax = {_curr4Draw.Particles.Cast<IGasParticleVer3>().Max(p => p.P):0.###}";
             pm.InvalidatePlot(true);
         }
 
@@ -142,27 +142,27 @@ namespace SPH_2D {
 
             switch(ind) {
                 case 0:
-                    foreach(var p in _curr4Draw.AllParticles.Cast<IsotropicGasParticle>()) {
+                    foreach(var p in _curr4Draw.AllParticles.Cast<IGasParticleVer3>()) {
                     colorSer2D.Points.Add(new ScatterPoint(p.X,p.Y,value: p.P / P0));
                         
                     }
                     break;
                 case 1:
-                foreach(var p in _curr4Draw.AllParticles.Cast<IsotropicGasParticle>()) {
+                foreach(var p in _curr4Draw.AllParticles.Cast<IGasParticleVer3>()) {
                     colorSer2D.Points.Add(new ScatterPoint(p.X,p.Y,value: p.Ro / Ro0));
                     
                 }
                 break;
                 case 2:
-                foreach(var p in _curr4Draw.AllParticles.Cast<IsotropicGasParticle>()) {
+                foreach(var p in _curr4Draw.AllParticles.Cast<IGasParticleVer3>()) {
 
-                    colorSer2D.Points.Add(new ScatterPoint(p.X,p.Y,value: p.Vel.Vec2D.GetLength() / p.GetCl()));
+                    colorSer2D.Points.Add(new ScatterPoint(p.X,p.Y,value: p.VelVec2D.GetLength() / p.C));
                    
 
                 }
                 break;
                 default:               
-                foreach(var p in _curr4Draw.AllParticles.Cast<IsotropicGasParticle>()) {
+                foreach(var p in _curr4Draw.AllParticles.Cast<IGasParticleVer3>()) {
 
                     colorSer2D.Points.Add(new ScatterPoint(p.X,p.Y,value: p.E / E0));
                     
@@ -170,7 +170,7 @@ namespace SPH_2D {
                 break;
                 
             }
-            pm.Title = $"{t:0.##########} s,  RoMax = {_curr4Draw.Particles.Cast<IsotropicGasParticle>().Max(p => p.Ro):0.###},  Pmax = {_curr4Draw.Particles.Cast<IsotropicGasParticle>().Max(p => p.P):0.###}";
+            pm.Title = $"{t:0.##########} s,  RoMax = {_curr4Draw.Particles.Cast<IGasParticleVer3>().Max(p => p.Ro):0.###},  Pmax = {_curr4Draw.Particles.Cast<IGasParticleVer3>().Max(p => p.P):0.###}";
             pm.InvalidatePlot(true);
         }
 

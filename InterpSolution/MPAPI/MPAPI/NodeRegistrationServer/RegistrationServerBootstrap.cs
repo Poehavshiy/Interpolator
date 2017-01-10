@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RemotingLite;
+using System.Net;
 
 namespace MPAPI.RegistrationServer
 {
@@ -34,6 +35,11 @@ namespace MPAPI.RegistrationServer
             _host.Open();
             Console.Title = "Registration server";
             Log.Info("Registration server is running.");
+            Log.Info($"IsIPv6LinkLocal = {_host.EndPoint.Address.IsIPv6LinkLocal}, IsIPv6Multicast = {_host.EndPoint.Address.IsIPv6Multicast}  IsIPv6SiteLocal = {_host.EndPoint.Address.IsIPv6SiteLocal}");
+            Log.Info($"Address = {_host.EndPoint.Address.AddressFamily.ToString()}");
+
+            //var s = Dns.GetHostEntry(_host.EndPoint.Address).AddressList;
+
             Console.ReadLine();
             Log.Info("Registration server terminated.");
         }

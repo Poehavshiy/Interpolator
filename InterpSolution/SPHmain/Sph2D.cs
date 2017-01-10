@@ -113,8 +113,7 @@ namespace SPH_2D {
                 }
                 var allPlst = allPart.ToList();
                 foreach(var particle in Particles) {
-                    particle.Neibs.Clear();
-                    particle.Neibs.AddRange(allPlst.Where(p => !p.Equals(particle)));
+                    particle.Neibs = allPlst;
                 }
             }
         }
@@ -175,6 +174,8 @@ namespace SPH_2D {
 
         public int MaxStuffCount { get; private set; }
 
+        public double border = 10;
+
         #endregion
 
         #region private methods
@@ -190,11 +191,10 @@ namespace SPH_2D {
             Cells.Clear();
             if(AllParticles.Count == 0)
                 return;
-            double zapas = 10;
-            xmin = AllParticles.Min(p => p.X) - hmax * zapas;
-            ymin = AllParticles.Min(p => p.Y) - hmax * zapas;
-            xmax = AllParticles.Max(p => p.X) + hmax * zapas;
-            ymax = AllParticles.Max(p => p.Y) + hmax * zapas;
+            xmin = AllParticles.Min(p => p.X) - hmax * border;
+            ymin = AllParticles.Min(p => p.Y) - hmax * border;
+            xmax = AllParticles.Max(p => p.X) + hmax * border;
+            ymax = AllParticles.Max(p => p.Y) + hmax * border;
 
             Nrows = (int)Ceiling((ymax - ymin) / hmax);
             Ncols = (int)Ceiling((xmax - xmin) / hmax);
@@ -252,9 +252,14 @@ namespace SPH_2D {
         void UpdateParticles() {
             //Заполняем d/dt
             for(int i = 0; i < MaxStuffCount; i++) {
-                Parallel.ForEach(Particles.Where(p => i < p.StuffCount), p => {
+                Parallel.ForEach(Particles.Where(p => i < p.StuffCount),p => {
                     p.DoStuff(i);
                 });
+
+                //foreach(var p in AllParticles.Where(p => i < p.StuffCount)) {
+                //    p.DoStuff(i);
+
+                //}
             }
         }
 
@@ -308,7 +313,8 @@ namespace SPH_2D {
             int i = 0;
             foreach(var p in Particles) {
                 p.Name = $"particle{i++}";
-                AddChildUnsafe(p);
+                if(p is IScnObj)
+                    AddChildUnsafe(p as IScnObj);
             }
             i = 0;
             foreach(var w in WallParticles) {

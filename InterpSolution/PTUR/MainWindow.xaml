@@ -1,0 +1,27 @@
+﻿<Window x:Class="PTUR.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PTUR"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TabControl x:Name="tabControl" Margin="0,0,0,0">
+            <TabItem Header="TabItem">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="274*"/>
+                        <RowDefinition Height="45*"/>
+                    </Grid.RowDefinitions>
+                    <oxy:PlotView Model="{Binding Model1Rx.Value}" Grid.Row="0"/>
+                    <Button x:Name="button" Content="Click Me" Grid.Row="1" HorizontalAlignment="Left" Width="145" Height="21" VerticalAlignment="Bottom" Click="button_Click_1"/>
+                    <Slider x:Name="slider" VerticalAlignment="Top" Grid.Row="1" Height="24" SmallChange="1" IsSnapToTickEnabled="True" TickPlacement="BottomRight" />
+                    <Button x:Name="button_Save" Content="Save" Grid.Row="1" Height="21" VerticalAlignment="Bottom" Margin="150,0,0,0" HorizontalAlignment="Left" Width="145" Click="button_Save_Click_1"/>
+                    <Button x:Name="button_Copy1" Content="Load" Grid.Row="1" Height="21" VerticalAlignment="Bottom" Margin="300,0,0,0" HorizontalAlignment="Left" Width="145" Click="button_Copy1_Click_1"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

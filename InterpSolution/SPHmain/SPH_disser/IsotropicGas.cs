@@ -34,8 +34,35 @@ namespace SPH_2D {
 
         public double k = 1.4;
 
+        public IPosition2D Vel { get; private set; }
+        public double dX {
+            get {
+                return Vel.X;
+            }
+
+            set {
+                Vel.X = value;
+            }
+        }
+
+        public double dY {
+            get {
+                return Vel.Y;
+            }
+
+            set {
+                Vel.Y = value;
+            }
+        }
+
         #region Constructor + Abstracts realiz
         public IsotropicGasParticle(double d, double hmax) : base(hmax) {
+
+            Vel = new Position2D();
+            Vel.Name = "Vel";
+            AddChild(Vel);
+
+            AddDiffVect(Vel);
             this.D = d;
 
             dV = new Position2D();

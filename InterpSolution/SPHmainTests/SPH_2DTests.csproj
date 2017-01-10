@@ -70,9 +70,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SegmentTests.cs" />
     <Compile Include="Sph2DTests.cs" />
+    <Compile Include="SPH2D_Ver3Tests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\My3DVec\Sharp3D.Math.csproj">
+      <Project>{441FF4C9-0F85-4470-A274-41408B420F86}</Project>
+      <Name>Sharp3D.Math</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Oslo\Oslo.csproj">
       <Project>{92589C2D-3833-496F-87E8-788FD511B162}</Project>
       <Name>Oslo</Name>

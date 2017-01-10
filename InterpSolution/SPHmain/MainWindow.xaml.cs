@@ -73,8 +73,10 @@ namespace SPH_2D {
             pr = calc;
             v0 = pr.Rebuild(pr.TimeSynch);
             //var dt = 0.0000001;
-            var dt = 5 * 10E-8;
-            sol = Ode.RK45(pr.TimeSynch,v0,pr.f,dt).WithStepRx(dt * 10,out controller);//.StartWith(new SolPoint(pr.TimeSynch,v0));
+            var dt = 1000 * 1E-6;
+            SPH2D_Ver3.dt = dt;
+            sol = Ode.RK45(pr.TimeSynch,v0,pr.f,dt).WithStepRx(dt * 10,out controller).StartWith(new SolPoint(pr.TimeSynch,v0));
+            //sol = SPH2D_Ver3.CoolIntegration(calc as Sph2D_improoveIntegr).WithStepRx(dt * 100,out controller).StartWith(new SolPoint(pr.TimeSynch,v0));
             controller.Pause();
 
             sol.ObserveOnDispatcher().Subscribe(sp => {
@@ -92,9 +94,19 @@ namespace SPH_2D {
         }
 
         public static Sph2D GetTest() {
-            string real = "i2.txt";
-            string bound = "b2.txt";
-            return new My_Sph2D( real, bound);
+            //string real = "i1.txt";
+            //string bound = "b1.txt";
+            //return new My_Sph2D(real,bound);
+
+
+            SPH2D_Ver3.h_default = 1d /50;
+            SPH2D_Ver3.k = 3;
+            SPH2D_Ver3.options = GasParticleOptions.DiffRoDiffE();
+            //return SPH2D_Ver3.TestTruba(1,0.2,0.5,1,1,0.1,0.125,SPH2D_Ver3.h_default/2);
+            //return SPH2D_Ver3.TestGasBall(1,1,0);
+            //return new Sph2D_improoveIntegr(SPH2D_Ver3.TestTrubaParticles(1,0.2,0.5,3E4,1500,1E4,1200,SPH2D_Ver3.h_default));
+            return new Sph2D_improoveIntegr(SPH2D_Ver3.TestGasBallParticles(1,1,0));
+
         }
 
         private void button_Save_Click(object sender,RoutedEventArgs e) {

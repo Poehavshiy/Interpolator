@@ -209,6 +209,8 @@ namespace SimpleIntegrator {
                     continue;
                 }
                 var orient = (IOrient3D)daddy.Children.FirstOrDefault(ch => ch is IOrient3D);
+                if(this.Equals(orient))
+                    return;
                 if(orient != null)
                     TransformChain.Add(orient);
 

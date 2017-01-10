@@ -104,7 +104,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IsotropicGas.cs" />
+    <Compile Include="SPH_disser\Sph2D_improoveIntegr.cs" />
+    <Compile Include="SPH_disser\SPH2D_Ver3.cs" />
+    <Compile Include="SPH_disser\BorderSegment.cs" />
+    <Compile Include="SPH_disser\IGasParticleVer3.cs" />
+    <Compile Include="SPH_disser\IsotropicGas.cs" />
+    <Compile Include="SPH_disser\GasParticleVer3.cs" />
     <Compile Include="My_IsotropicGas.cs" />
     <Compile Include="Particle2D.cs" />
     <Compile Include="Sph2D.cs" />

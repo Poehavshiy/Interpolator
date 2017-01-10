@@ -58,10 +58,11 @@ namespace SimpleIntegrator {
         public Action<double> SynchMeForNext { get; set; } = null;
         public Action RebuildStructureAction { get; set; } = null;
         public Dictionary<string,FlagFunct> FlagDict { get; set; } = new Dictionary<string,FlagFunct>();
+        
 
 
         private ParallelQuery<IScnPrm> DiffArr_parallel;
-        public double TimeSynch { get; private set; }
+        public double TimeSynch { get; protected set; }
 
         public void SynchMeTo(double t,ref Vector y) {
             //if(DiffArrN != y.Length)
@@ -82,6 +83,7 @@ namespace SimpleIntegrator {
         public Vector f(double t,Vector y) {
 
             SynchMeTo(t,ref y);
+            
             var result = Vector.Zeros(DiffArrN);
             for(int i = 0; i < DiffArrN; i++) {
                 result[i] = DiffArr[i].MyDiff.GetVal(t);
@@ -91,6 +93,7 @@ namespace SimpleIntegrator {
         }
 
         public Vector Rebuild(double toTime = 0.0d) {
+            TimeSynch = toTime;
             RebuildStruct();
             if(!ApplyLaws())
                 throw new Exception("Структура неправильная. Невозможно реализовать все Laws");
@@ -111,7 +114,13 @@ namespace SimpleIntegrator {
                 DiffArr[i].NumInVector = i;
             }
             DiffArr_parallel = DiffArr.AsParallel();
-            return new Vector(diffArrSeq.Select(prm => prm.GetVal(toTime)).ToArray());
+            return VectorCurrent;
+        }
+
+        public Vector VectorCurrent {
+            get {
+                return new Vector(DiffArr.Select(prm => prm.GetVal(TimeSynch)).ToArray());
+            }
         }
 
         public bool ApplyLaws() {

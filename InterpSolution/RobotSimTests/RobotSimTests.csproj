@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="Phys3DHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RbSurfAngleFloorTests.cs" />
+    <Compile Include="RbSurfFloorTests.cs" />
     <Compile Include="RbTrackTests.cs" />
     <Compile Include="RbWheelTests.cs" />
   </ItemGroup>

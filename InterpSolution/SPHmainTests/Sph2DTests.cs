@@ -65,8 +65,8 @@ namespace SPH_2D.Tests {
                      };
             var dict = gr.ToDictionary(g => g.Key);
 
-            Assert.AreEqual(8,maxNeibs);
-            Assert.AreEqual(3,minNeibs);
+            Assert.AreEqual(8+1,maxNeibs);
+            Assert.AreEqual(3+1,minNeibs);
 
         }
     }

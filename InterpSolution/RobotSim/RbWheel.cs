@@ -14,6 +14,8 @@ namespace RobotSim {
         public double Mass { get; set; }
         public double Mx { get; set; }
 
+        public Vector3D localPos;
+
         public double R;
         public double R_max;
         public double H_wheel;
@@ -37,11 +39,11 @@ namespace RobotSim {
             double R, 
             double R_max,
             double H_wheel, 
-            double H_zac, 
+            double H_zac,
             double kR = 1E5, 
             double muR = 1E4, 
             double kH = 1E5,
-            double muH = 1E4) 
+            double muH = 1E4):base("Wheel") 
             
         {
             n_shag = n;
@@ -53,13 +55,17 @@ namespace RobotSim {
             this.muR = muR;
             this.kH = kH;
             this.muH = muH;
+            this.localPos = Vector3D.Zero;
 
             gamma = 2 * PI / n;
 
             AddDiffPropToParam(pBetta,pOmegaX);
         }
-
         public static RbWheel GetStandart() {
+            return GetStandart(Vector3D.Zero);
+        }
+
+        public static RbWheel GetStandart(Vector3D localPos) {
             int n = 11;
             double r_real = 0.015;
             double R_ideal = 0.009 / (2 * Sin(PI / n));
@@ -69,9 +75,15 @@ namespace RobotSim {
                 Mass = 0.002242,
                 Ix = ix
             };
+            res.localPos = localPos;
             return res;
         }
 
+        /// <summary>
+        /// Вычисляется локальная сила, действующая в радиальном направлении и направлении оси Х
+        /// </summary>
+        /// <param name="localPoint"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector3D GetLocalRH_wheelForce(Vector3D localPoint) {
             var rlocalVec = new Vector3D(0,localPoint.Y,localPoint.Z);
@@ -89,6 +101,11 @@ namespace RobotSim {
             return f_r + f_h;
         }
 
+        /// <summary>
+        /// Вычисляется локальная сила, действующая в тангенциальном направлении (только в окрестностях "зубцов")
+        /// </summary>
+        /// <param name="localPoint"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector3D GetlocalTauForce(Vector3D localPoint) {
             
@@ -109,6 +126,11 @@ namespace RobotSim {
             return -kH * dh * n0;
         }
 
+        /// <summary>
+        /// Получить индекс ближайшего зубца
+        /// </summary>
+        /// <param name="localPoint"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetClosestInd(Vector3D localPoint) {
             const double _2PI = 2 * PI;

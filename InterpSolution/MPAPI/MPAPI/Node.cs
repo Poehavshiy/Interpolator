@@ -157,7 +157,7 @@ namespace MPAPI
                 try
                 {
                     //Open a connection to the registration server
-                    IPEndPoint registrationServerEndPoint = new IPEndPoint(Dns.GetHostEntry(registrationServerNameOrAddress).AddressList[0], registrationServerPort);
+                    IPEndPoint registrationServerEndPoint = new IPEndPoint(Dns.GetHostEntry(registrationServerNameOrAddress).AddressList[2], registrationServerPort);
                     _registrationServerProxy = ProxyFactory.CreateProxy<IRegistrationServer>(registrationServerEndPoint);
                     
                     //get the nodes that are already registered
