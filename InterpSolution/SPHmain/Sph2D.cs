@@ -190,10 +190,11 @@ namespace SPH_2D {
             Cells.Clear();
             if(AllParticles.Count == 0)
                 return;
-            xmin = AllParticles.Min(p => p.X) - hmax * 0.5;
-            ymin = AllParticles.Min(p => p.Y) - hmax * 0.5;
-            xmax = AllParticles.Max(p => p.X) + hmax * 0.5;
-            ymax = AllParticles.Max(p => p.Y) + hmax * 0.5;
+            double zapas = 10;
+            xmin = AllParticles.Min(p => p.X) - hmax * zapas;
+            ymin = AllParticles.Min(p => p.Y) - hmax * zapas;
+            xmax = AllParticles.Max(p => p.X) + hmax * zapas;
+            ymax = AllParticles.Max(p => p.Y) + hmax * zapas;
 
             Nrows = (int)Ceiling((ymax - ymin) / hmax);
             Ncols = (int)Ceiling((xmax - xmin) / hmax);
@@ -251,7 +252,7 @@ namespace SPH_2D {
         void UpdateParticles() {
             //Заполняем d/dt
             for(int i = 0; i < MaxStuffCount; i++) {
-                Parallel.ForEach(AllParticles.Where(p => i < p.StuffCount), p => {
+                Parallel.ForEach(Particles.Where(p => i < p.StuffCount), p => {
                     p.DoStuff(i);
                 });
             }

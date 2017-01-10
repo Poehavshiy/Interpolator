@@ -73,7 +73,7 @@ namespace SPH_2D {
             pr = calc;
             v0 = pr.Rebuild(pr.TimeSynch);
             //var dt = 0.0000001;
-            var dt = 5 * 10E-6;
+            var dt = 5 * 10E-8;
             sol = Ode.RK45(pr.TimeSynch,v0,pr.f,dt).WithStepRx(dt * 10,out controller);//.StartWith(new SolPoint(pr.TimeSynch,v0));
             controller.Pause();
 
@@ -92,8 +92,8 @@ namespace SPH_2D {
         }
 
         public static Sph2D GetTest() {
-            string real = "i1.txt";
-            string bound = "b1.txt";
+            string real = "i2.txt";
+            string bound = "b2.txt";
             return new My_Sph2D( real, bound);
         }
 
